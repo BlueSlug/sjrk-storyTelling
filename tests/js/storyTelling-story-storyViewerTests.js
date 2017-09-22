@@ -22,7 +22,14 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             tags: ["tag1","tag2","tag3"]
         },
         components: {
-            resourceLoader: {
+            templateLoader: {
+                options: {
+                    terms: {
+                        resourcePrefix: "../.."
+                    }
+                }
+            },
+            messageLoader: {
                 options: {
                     terms: {
                         resourcePrefix: "../.."

@@ -21,11 +21,15 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
         },
         distributeOptions: [{
             source: "{that}.options.resourceLoaderConfig.resourcePrefix",
-            target: "{that resourceLoader}.options.terms.resourcePrefix"
+            target: "{that templateLoader}.options.terms.resourcePrefix"
+        },
+        {
+            source: "{that}.options.resourceLoaderConfig.resourcePrefix",
+            target: "{that messageLoader}.options.terms.resourcePrefix"
         },
         {
             source: "{that}.options.resourceLoaderConfig.locale",
-            target: "{that resourceLoader}.options.locale"
+            target: "{that messageLoader}.options.locale"
         }],
         events: {
             onStorySubmitRequestedFromEditorNoView: null,
@@ -116,7 +120,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
                     }
                 }
             },
-            resourceLoader: {
+            templateLoader: {
                 options: {
                     resources: {
                         componentTemplate: "%resourcePrefix/src/templates/storyAuthoring.html"

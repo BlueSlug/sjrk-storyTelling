@@ -13,6 +13,39 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
 
     "use strict";
 
+    fluid.defaults("sjrk.storyTelling.resourceLoader", {
+        gradeNames: ["fluid.resourceLoader"],
+        terms: {
+            "resourcePrefix": "."
+        }
+    });
+
+    fluid.defaults("sjrk.storyTelling.resourceLoaderForTemplate", {
+        gradeNames: ["sjrk.storyTelling.resourceLoader"],
+        resources: {
+            // Specified by using grade
+            // The template file using the
+            // fluid.stringTemplate syntax
+            // componentTemplate: ""
+        }
+    });
+
+    fluid.defaults("sjrk.storyTelling.resourceLoaderForLocalization", {
+        gradeNames: ["sjrk.storyTelling.resourceLoader"],
+        resources: {
+            // Specified by using grade
+            // The messages file (JSON)
+            // componentMessages: ""
+        },
+        locale: "en",
+        defaultLocale: "en"
+    });
+
+    sjrk.storyTelling.resourceLoaderForLocalization.loadLocalizationMessages = function (componentMessages, that, modelEndpoint) {
+        var messages = JSON.parse(componentMessages);
+        that.applier.change(modelEndpoint, messages);
+    };
+
     // Component that renders its UI using an external
     // HTML file with fluid.stringTemplate syntax
     // see concrete components in storyTelling.js for examples
@@ -33,17 +66,21 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             }
         },
         events: {
-            "onTemplateRendered": null
+            "onTemplateRendered": null,
+            "onAllResourcesLoaded": {
+                events: {
+                    "onTemplatesLoaded": "{that}.templateLoader.events.onResourcesLoaded"
+                }
+            }
         },
         listeners: {
-            "{resourceLoader}.events.onResourcesLoaded": {
-                funcName: "{that}.renderTemplateOnSelf",
-                "namespace": "renderTemplateOnSelf"
+            "onAllResourcesLoaded.renderTemplateOnSelf": {
+                funcName: "{that}.renderTemplateOnSelf"
             }
         },
         components: {
-            resourceLoader: {
-                type: "sjrk.storyTelling.messageLoader"
+            templateLoader: {
+                type: "sjrk.storyTelling.resourceLoaderForTemplate"
             }
         },
         invokers: {
@@ -63,7 +100,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             // waits on
             renderTemplateOnSelf: {
                 funcName: "sjrk.storyTelling.templatedComponent.renderTemplate",
-                args: ["{that}.events.onTemplateRendered", "{that}.container", "{resourceLoader}.resources.componentTemplate.resourceText", "{that}.model.templateTerms"]
+                args: ["{that}.events.onTemplateRendered", "{that}.container", "{templateLoader}.resources.componentTemplate.resourceText", "{that}.model.templateTerms"]
             }
         }
     });
@@ -128,48 +165,49 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
     // https://wiki.gpii.net/w/Technology_Evaluation_-_Internationalising_and_Localising_UI_strings#Detailed_Review
     fluid.defaults("sjrk.storyTelling.templatedComponentWithLocalization", {
         gradeNames: ["sjrk.storyTelling.templatedComponent"],
+        events: {
+            "onAllResourcesLoaded": {
+                events: {
+                    "onMessagesLoaded": "{that}.messageLoader.events.onResourcesLoaded"
+                }
+            }
+        },
         listeners: {
-            "{resourceLoader}.events.onResourcesLoaded": {
-                "func": "sjrk.storyTelling.messageLoaderWithLocalization.loadLocalizationMessages",
-                "args": ["{resourceLoader}.resources.componentMessages.resourceText", "{that}", "templateTerms"],
-                "priority": "before:renderTemplateOnSelf",
-                "namespace": "loadLocalizationMessages"
+            "{messageLoader}.events.onResourcesLoaded": {
+                "func": "sjrk.storyTelling.resourceLoaderForLocalization.loadLocalizationMessages",
+                "args": ["{messageLoader}.resources.componentMessages.resourceText", "{that}", "templateTerms"]
+            },
+            "onAllResourcesLoaded.log": {
+                "this": "console",
+                "method": "log",
+                "args": ["onAllResourcesLoaded fired", "{that}"]
             }
         },
         components: {
-            resourceLoader: {
-                type: "sjrk.storyTelling.messageLoaderWithLocalization"
+            templateLoader: {
+                options: {
+                    listeners: {
+                        "onResourcesLoaded.log": {
+                            "this": "console",
+                            "method": "log",
+                            "args": ["templateLoader onResourcesLoaded fired", "{templatedComponentWithLocalization}"]
+                        }
+                    }
+                }
+            },
+            messageLoader: {
+                type: "sjrk.storyTelling.resourceLoaderForLocalization",
+                options: {
+                    listeners: {
+                        "onResourcesLoaded.log": {
+                            "this": "console",
+                            "method": "log",
+                            "args": ["messageLoader onResourcesLoaded fired", "{templatedComponentWithLocalization}"]
+                        }
+                    }
+                }
             }
         }
     });
-
-    fluid.defaults("sjrk.storyTelling.messageLoader", {
-        gradeNames: ["fluid.resourceLoader"],
-        resources: {
-            // Specified by using grade
-            // The template file using the
-            // fluid.stringTemplate syntax
-            // componentTemplate: ""
-        },
-        terms: {
-            "resourcePrefix": "."
-        }
-    });
-
-    fluid.defaults("sjrk.storyTelling.messageLoaderWithLocalization", {
-        gradeNames: ["sjrk.storyTelling.messageLoader"],
-        resources: {
-            // Specified by using grade
-            // The messages file (JSON)
-            // componentMessages: ""
-        },
-        locale: "en",
-        defaultLocale: "en"
-    });
-
-    sjrk.storyTelling.messageLoaderWithLocalization.loadLocalizationMessages = function (componentMessages, that, modelEndpoint) {
-        var messages = JSON.parse(componentMessages);
-        that.applier.change(modelEndpoint, messages);
-    };
 
 })(jQuery, fluid);

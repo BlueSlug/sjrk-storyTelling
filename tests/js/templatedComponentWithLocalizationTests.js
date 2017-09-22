@@ -19,10 +19,16 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             testMessage: ".sjrkc-testTemplatedComponentWithLocalization-testMessage"
         },
         components: {
-            resourceLoader: {
+            templateLoader: {
                 options: {
                     resources: {
-                        componentTemplate: "../html/templates/testLocalizationTemplate.html",
+                        componentTemplate: "../html/templates/testLocalizationTemplate.html"
+                    }
+                }
+            },
+            messageLoader: {
+                options: {
+                    resources: {
                         componentMessages: "../json/messages/testLocalizationMessages.json"
                     }
                 }
@@ -92,7 +98,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
                 createOnEvent: "{templatedComponentWithLocalizationTester}.events.onTestCaseStart",
                 options: {
                     components: {
-                        resourceLoader: {
+                        messageLoader: {
                             options: {
                                 // locale: "en"
                             }
@@ -111,7 +117,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             gradeNames: ["sjrk.storyTelling.templatedComponentWithLocalizationTestBase"],
             distributeOptions: [{
                 record: languageCode,
-                target: "{that templatedComponentWithLocalization}.options.components.resourceLoader.options.locale"
+                target: "{that templatedComponentWithLocalization}.options.components.messageLoader.options.locale"
             }, {
                 record: "#testTemplatedComponentWithLocalization_" + languageCode,
                 target: "{that templatedComponentWithLocalization}.container"

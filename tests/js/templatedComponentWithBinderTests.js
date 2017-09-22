@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             testValueInput: ".testc-input"
         },
         components: {
-            resourceLoader: {
+            templateLoader: {
                 options: {
                     resources: {
                         componentTemplate: "../html//templates/testBinderTemplate.html"

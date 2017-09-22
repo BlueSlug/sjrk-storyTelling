@@ -9,7 +9,6 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
 
 /* global fluid */
 
-
 (function ($, fluid) {
 
     "use strict";
@@ -23,11 +22,18 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             language: "",
             images: [],
             tags: [],
+            categories: [
+                // store a list of category keys pointing to Categories values
+                // "childhood", "immigration", "education"
+            ],
             summary: "",
-            requestedTranslations: [
+            requestedTranslations: {
+                // "es": {
+                //     timesRequested: 2
+                // }
                 //"es": 2, // a list of language codes as keys with
                 //"fr": 5  // the number of requests for that language
-            ],
+            },
             translationOf: null
         }
     });
@@ -81,7 +87,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
                     }
                 }
             },
-            resourceLoader: {
+            messageLoader: {
                 options: {
                     resources: {
                         componentMessages: "%resourcePrefix/src/messages/storyMessages.json"

@@ -16,7 +16,14 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
     fluid.defaults("sjrk.storyTelling.story.testStoryEditor", {
         gradeNames: ["sjrk.storyTelling.story.storyEditor"],
         components: {
-            resourceLoader: {
+            templateLoader: {
+                options: {
+                    terms: {
+                        resourcePrefix: "../.."
+                    }
+                }
+            },
+            messageLoader: {
                 options: {
                     terms: {
                         resourcePrefix: "../.."
