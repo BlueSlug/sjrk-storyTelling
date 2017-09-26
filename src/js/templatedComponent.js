@@ -67,9 +67,10 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
         },
         events: {
             "onTemplateRendered": null,
+            "onTemplatesLoaded": null,
             "onAllResourcesLoaded": {
                 events: {
-                    "onTemplatesLoaded": "{that}.templateLoader.events.onResourcesLoaded"
+                    "onTemplatesLoaded": "onTemplatesLoaded"
                 }
             }
         },
@@ -80,7 +81,13 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
         },
         components: {
             templateLoader: {
-                type: "sjrk.storyTelling.resourceLoaderForTemplate"
+                type: "sjrk.storyTelling.resourceLoaderForTemplate",
+                options: {
+                    createOnEvent: "{templatedComponent}.events.onCreate",
+                    listeners: {
+                        "onResourcesLoaded.escalate": "{templatedComponent}.events.onTemplatesLoaded.fire"
+                    }
+                }
             }
         },
         invokers: {
@@ -166,17 +173,14 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
     fluid.defaults("sjrk.storyTelling.templatedComponentWithLocalization", {
         gradeNames: ["sjrk.storyTelling.templatedComponent"],
         events: {
+            "onMessagesLoaded": null,
             "onAllResourcesLoaded": {
                 events: {
-                    "onMessagesLoaded": "{that}.messageLoader.events.onResourcesLoaded"
+                    "onMessagesLoaded": "onMessagesLoaded"
                 }
             }
         },
         listeners: {
-            "{messageLoader}.events.onResourcesLoaded": {
-                "func": "sjrk.storyTelling.resourceLoaderForLocalization.loadLocalizationMessages",
-                "args": ["{messageLoader}.resources.componentMessages.resourceText", "{that}", "templateTerms"]
-            },
             "onAllResourcesLoaded.log": {
                 "this": "console",
                 "method": "log",
@@ -197,13 +201,19 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             },
             messageLoader: {
                 type: "sjrk.storyTelling.resourceLoaderForLocalization",
+                createOnEvent: "{templatedComponent}.events.onCreate",
                 options: {
                     listeners: {
                         "onResourcesLoaded.log": {
                             "this": "console",
                             "method": "log",
                             "args": ["messageLoader onResourcesLoaded fired", "{templatedComponentWithLocalization}"]
-                        }
+                        },
+                        "onResourcesLoaded.loadLocalizationMessages": {
+                            "func": "sjrk.storyTelling.resourceLoaderForLocalization.loadLocalizationMessages",
+                            "args": ["{that}.resources.componentMessages.resourceText", "{templatedComponentWithLocalization}", "templateTerms"]
+                        },
+                        "onResourcesLoaded.escalate": "{templatedComponentWithLocalization}.events.onMessagesLoaded.fire"
                     }
                 }
             }
