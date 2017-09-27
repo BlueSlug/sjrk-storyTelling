@@ -83,7 +83,6 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             templateLoader: {
                 type: "sjrk.storyTelling.resourceLoaderForTemplate",
                 options: {
-                    createOnEvent: "{templatedComponent}.events.onCreate",
                     listeners: {
                         "onResourcesLoaded.escalate": "{templatedComponent}.events.onTemplatesLoaded.fire"
                     }
@@ -201,7 +200,6 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             },
             messageLoader: {
                 type: "sjrk.storyTelling.resourceLoaderForLocalization",
-                createOnEvent: "{templatedComponent}.events.onCreate",
                 options: {
                     listeners: {
                         "onResourcesLoaded.log": {
