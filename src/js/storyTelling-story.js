@@ -25,6 +25,7 @@ https://raw.githubusercontent.com/waharnum/sjrk-storyTelling/master/LICENSE.txt
             tags: [],
             categories: [],
             summary: "",
+            sharing: "", //flexible indicator of privacy/sharing status, e.g. "public", "private", "unlisted"
             requestedTranslations: [
                 //"es": 2, // a list of language codes as keys with
                 //"fr": 5  // the number of requests for that language
